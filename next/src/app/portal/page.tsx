@@ -39,7 +39,7 @@ export default function Portal() {
     console.log("User Data:", userdata);
     const token = localStorage.getItem("token");
     if (!token) {
-      router.push("/signin"); // Redirect if not logged in
+      router.push("/signIn"); // Redirect if not logged in
     }
     if (userdata?.me?.userType) {
       setUserType(userdata.me.userType);
@@ -58,72 +58,74 @@ export default function Portal() {
 
   return (
     <div>
-              <div>
+      <div className="sm:hidden">
           <div className="absolute bg-white w-full h-full" style={{zIndex:-2}}></div>
             <MobileNavBar toggleSidebar={toggleSidebar} isSidebarOpen={isSidebarOpen}/>
             <MobileSidebar toggleSidebar={toggleSidebar} isSidebarOpen={isSidebarOpen}/>
-        </div>
-      <Navbar />
-
-      <div className="w-full min-h-[45vw] px-[8vw] py-[3vw] bg-secondary flex justify-center">
-        <div className="w-full bg-white" style={{ fontFamily: 'Montserrat' }}>
-          <div className="text-tertiary px-[4vw] py-[3vw] font-semibold text-[2vw]"> 
-            {userType===jobSeekerRef ? "Saved Jobs" : 
-            userType===employerRef ? "My Job Postings" :
-            userType===adminRef ? "Employer Postings" : ""} </div>
-
-          {/* Job Grid (2-column layout) */}
-          <div className="grid grid-cols-2 gap-[2vw] px-[4vw] pb-[3vw]">
-            {data.allJobs.map((job: any) => (
-              <JobBlock
-                key={job.id}
-                job={job}
-                isSelected={selectedJob?.id === job.id} // Pass boolean instead of object
-                xBorder={true}
-                onClick={() => setSelectedJob(job)} // Open popup on click
-              />
-            ))}
-
-            {(userType === employerRef || userType === adminRef) && (
-              <div className="w-full h-[7vw] bg-gray-300 flex items-center justify-center cursor-pointer" onClick={handleCreateJobClick}>
-                <span className="text-white text-[3vw]">+</span>
-              </div>
-            )}
-            
-          </div>
-        </div>
       </div>
+      <div className="hidden sm:block">
+          <Navbar />
 
-      {/* Job Details Popup */}
-      {selectedJob && (
-        <div className="w-full h-full px-[8vw] bg-secondary">
-          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-            <ExtendedJobBlock 
-              selectedJob={selectedJob}
-              onClose={() => setSelectedJob(null)}
-              user = {userType}
-            />
-            
-            {userType === jobSeekerRef && (
-              <UserApplication onClose={() => setSelectedJob(null)} id={selectedJob.id.toString()}/>
-            )}
+          <div className="w-full min-h-[45vw] px-[8vw] py-[3vw] bg-secondary flex justify-center">
+            <div className="w-full bg-white" style={{ fontFamily: 'Montserrat' }}>
+              <div className="text-tertiary px-[4vw] py-[3vw] font-semibold text-[2vw]"> 
+                {userType===jobSeekerRef ? "Saved Jobs" : 
+                userType===employerRef ? "My Job Postings" :
+                userType===adminRef ? "Employer Postings" : ""} </div>
 
+              {/* Job Grid (2-column layout) */}
+              <div className="grid grid-cols-2 gap-[2vw] px-[4vw] pb-[3vw]">
+                {data.allJobs.map((job: any) => (
+                  <JobBlock
+                    key={job.id}
+                    job={job}
+                    isSelected={selectedJob?.id === job.id} // Pass boolean instead of object
+                    xBorder={true}
+                    onClick={() => setSelectedJob(job)} // Open popup on click
+                  />
+                ))}
+
+                {(userType === employerRef || userType === adminRef) && (
+                  <div className="w-full h-[7vw] bg-gray-300 flex items-center justify-center cursor-pointer" onClick={handleCreateJobClick}>
+                    <span className="text-white text-[3vw]">+</span>
+                  </div>
+                )}
+                
+              </div>
+            </div>
           </div>
-        </div>
-      )}
 
-      {/* New Job Form Popup */}
-      {isCreatingJob && (
-        <div className="w-full px-[8vw] bg-secondary flex items-center justify-center">
-          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-            <JobForm onClose={() => setIsCreatingJob(false)} onJobCreated={refetch}/>
-          </div>
-        </div>
-      )}
-      
+          {/* Job Details Popup */}
+          {selectedJob && (
+            <div className="w-full h-full px-[8vw] bg-secondary">
+              <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                <ExtendedJobBlock 
+                  selectedJob={selectedJob}
+                  onClose={() => setSelectedJob(null)}
+                  user = {userType}
+                />
+                
+                {userType === jobSeekerRef && (
+                  <UserApplication onClose={() => setSelectedJob(null)} id={selectedJob.id.toString()}/>
+                )}
 
-      <Footer />
-    </div>
+              </div>
+            </div>
+          )}
+
+          {/* New Job Form Popup */}
+          {isCreatingJob && (
+            <div className="w-full px-[8vw] bg-secondary flex items-center justify-center">
+              <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                <JobForm onClose={() => setIsCreatingJob(false)} onJobCreated={refetch}/>
+              </div>
+            </div>
+          )}
+          
+
+          <Footer />
+      </div>
+    </div> 
   );
 }
 
