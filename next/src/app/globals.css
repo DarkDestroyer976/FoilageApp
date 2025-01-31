@@ -91,3 +91,9 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+@font-face {
+  font-family: 'Montserrat';
+  src: url('../../public/fonts/Montserrat-Medium.ttf') format('truetype');
+  font-style: normal;
+}

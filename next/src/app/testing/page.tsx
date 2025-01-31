@@ -1,11 +1,11 @@
-import InteractiveSection from './testinteraction'; // Client-side component
 
-export default function JobManagementPage() {
+import InteractiveSection from "./testinteraction";
+
+const JobsPage = () => {
+
   return (
-    <div>
-      <h1 className='font-bold'>Job Management</h1>
-      {/* Use InteractiveSection to handle fetching and displaying jobs */}
-      <InteractiveSection />
-    </div>
+    <InteractiveSection/>
   );
-}
+};
+
+export default JobsPage;
