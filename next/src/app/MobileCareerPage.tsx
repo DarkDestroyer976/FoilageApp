@@ -8,6 +8,11 @@ import MobileSearchBar from "./MobileSearchBar";
 import Dropdown from "./components/Dropdown";
 import JobList from "./components/JobList";
 import MobileDropdown from "./MobileDropdown";
+import MobileJobList from "./MobileJobList";
+import { useSearchParams } from "next/navigation";
+import ExtendedJobBlock from "./components/ExtendedJobBlock";
+import MobileExtendedJobBlock from "./MobileExtendedJobBlock";
+import SearchBar from "./components/SearchBar";
 
 const MobileCareerPage: React.FC = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -16,20 +21,29 @@ const MobileCareerPage: React.FC = () => {
       setIsSidebarOpen(!isSidebarOpen);
     }
 
+      const searchParams = useSearchParams();
+      const keyword = searchParams.get('keyword') || '';
+      const location = searchParams.get('location') || '';
     
-    const [openDropdown, setOpenDropdown] = useState<string | null>(null);
-    const [selectedJob, setSelectedJob] = useState<any | null>(null); // New state to hold the selected job
-
-    const closeAllDropdowns = () => {
+      const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+      const [selectedJob, setSelectedJob] = useState<any | null>(null); // New state to hold the selected job
+    
+      const closeAllDropdowns = () => {
         setOpenDropdown(null); // Close all dropdowns
       };
     
       const handleJobClick = (job: any) => {
         setSelectedJob(job); // Update state when a job is clicked
       };
+    
+      const closeJobBlock = () => {
+        setSelectedJob(null);
+      }
+
+
 
     return(
-        <div >
+        <div className="">
             <div className="absolute bg-white w-full h-full" style={{zIndex:-2}}></div>
             <MobileNavBar toggleSidebar={toggleSidebar} isSidebarOpen={isSidebarOpen}/>
             <img src={CareersImage.src} className="absolute w-full" style={{zIndex:-2}}></img>
@@ -37,7 +51,7 @@ const MobileCareerPage: React.FC = () => {
                 <MobileSearchBar/>
             </div>
             {/* Box 1 */}
-            <div className="mt-[20vw] justify-self-center bg-white rounded-lg  w-[65vw] h-[80vw]" style={{fontFamily: 'Montserrat'}}>
+            <div className="mt-[20vw] justify-self-center bg-white rounded-lg  w-[65vw] h-[100vw]" style={{fontFamily: 'Montserrat'}}>
                 <div className="px-[0vw] py-[1.5vw] mb-[5vw] text-black w-full flex flex-row justify-between items-center">
                     
                     <div className="text-[5vw]">Filters</div>
@@ -66,10 +80,19 @@ const MobileCareerPage: React.FC = () => {
                     />
                 </div>
                 <div className="flex flex-col h-full pb-[10vw]">
-                    <JobList onJobClick={handleJobClick} selectedJob={selectedJob} /> {/* Pass selectedJob */}
+                    <MobileJobList onJobClick={handleJobClick} selectedJob={selectedJob} /> {/* Pass selectedJob */}
                 </div>
             </div>
-
+             <div className="flex w-[70vw] h-[80vw] mt-[-40vw] mb-[60vw] justify-self-center ">
+                        {/* Render selected job details */}
+                        {selectedJob ? (
+                          <div className="bg-white rounded-lg drop-shadow-[0_0.4vw_0.1vw_rgba(0,0,0,0.2)] border w-full h-full flex flex-col items-center justify-center">
+                            <MobileExtendedJobBlock selectedJob={selectedJob} onClose={closeJobBlock}></MobileExtendedJobBlock>
+                          </div>
+                        ) : (
+                            <div></div>
+                        )}
+                    </div>
             <MobileSidebar toggleSidebar={toggleSidebar} isSidebarOpen={isSidebarOpen}/>
         </div>
     )

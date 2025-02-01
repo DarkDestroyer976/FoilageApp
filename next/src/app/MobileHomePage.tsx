@@ -9,7 +9,6 @@ import MobileSidebar from "./MobileSidebar"
 import { useState } from "react"
 import { useRouter } from "next/router"
 
-
 const MobileHomePage : React.FC = () => {
     
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -31,12 +30,11 @@ const MobileHomePage : React.FC = () => {
             </div>
             <MobileSearchBar/>
             <MobileSignUpBox/>
-            <MobilePopularJobs/>
+            {/* <MobilePopularJobs/> */}
+
             <MobileSidebar toggleSidebar={toggleSidebar} isSidebarOpen={isSidebarOpen}/>
         </div>
-        // <div className="text-sidebar-active">
-        //     Sidebar
-        // </div>
+
         
     )
 }

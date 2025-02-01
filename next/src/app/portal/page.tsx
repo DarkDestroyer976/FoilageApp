@@ -61,8 +61,11 @@ export default function Portal() {
       <div className="sm:hidden">
           <MobilePortalPage/>
       </div>
-      <div className="hidden sm:block">
-          <Navbar />
+      <div className="">
+        <div className="hidden sm:block">
+          <Navbar/>
+
+        </div>
 
       <div className="w-full min-h-[45vw] px-[8vw] py-[3vw] bg-secondary flex justify-center">
         <div className="w-full bg-white" style={{ fontFamily: 'Montserrat' }}>
