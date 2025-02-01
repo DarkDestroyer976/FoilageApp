@@ -14,7 +14,7 @@ const MobileNavBar: React.FC<MobileNavBarProps> = ({toggleSidebar, isSidebarOpen
 
     const router = useRouter()
     const onAvatarClick = () => {
-        router.push("/signin")
+        router.push("/signIn")
     }
     const onLeafClick = () => {
         router.push("/")

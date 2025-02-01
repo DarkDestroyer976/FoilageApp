@@ -17,7 +17,7 @@ const SignOut = () => {
 
   const handleSignOut = () => {
     localStorage.removeItem("token"); // ✅ Remove token
-    router.push("/signin"); // 🚀 Redirect to login
+    router.push("/signIn"); // 🚀 Redirect to login
   };
 
   return (
