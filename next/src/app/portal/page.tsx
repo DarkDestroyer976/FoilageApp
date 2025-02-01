@@ -17,16 +17,11 @@ import Image from "next/image";
 import "../../app/globals.css"
 import MobileNavBar from "../MobileNavBar";
 import MobileSidebar from "../MobileSidebar";
+import MobilePortalPage from "../MobilePortalPage";
 
 export default function Portal() {
 
   const router = useRouter();
-
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
-  const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
-  }
 
   const { data, loading, error, refetch } = useQuery(GET_ALL_JOBS);
   const [selectedJob, setSelectedJob] = useState<any | null>(null); // State for selected job
@@ -59,9 +54,7 @@ export default function Portal() {
   return (
     <div>
       <div className="sm:hidden">
-          <div className="absolute bg-white w-full h-full" style={{zIndex:-2}}></div>
-            <MobileNavBar toggleSidebar={toggleSidebar} isSidebarOpen={isSidebarOpen}/>
-            <MobileSidebar toggleSidebar={toggleSidebar} isSidebarOpen={isSidebarOpen}/>
+          <MobilePortalPage/>
       </div>
       <div className="hidden sm:block">
           <Navbar />

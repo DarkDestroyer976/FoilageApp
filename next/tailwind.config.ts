@@ -10,7 +10,7 @@ export default {
   theme: {
   	extend: {
 		screens: {
-			'sm': '501px',
+			'sm': '540px',
 		},
   		colors: {
   			background: 'hsl(var(--background))',

@@ -26,7 +26,7 @@ const items = [
     {
         name:"Career",
         icon: UserSearch,
-        path: "/career"
+        path: "/careers"
     },
     {
         name:"Sign In",

@@ -1,12 +1,10 @@
 'use client'
 
-import Image from "next/image";
-import "../../app/globals.css"
 import { useState } from "react";
-import MobileNavBar from "../MobileNavBar";
-import MobileSidebar from "../MobileSidebar";
+import MobileNavBar from "./MobileNavBar"
+import MobileSidebar from "./MobileSidebar"
 
-const CareerPage: React.FC = () => {
+const MobileSignInPage: React.FC = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     const toggleSidebar = () => {
@@ -20,6 +18,6 @@ const CareerPage: React.FC = () => {
             <MobileSidebar toggleSidebar={toggleSidebar} isSidebarOpen={isSidebarOpen}/>
         </div>
     )
-} 
+}
 
-export default CareerPage
+export default MobileSignInPage
