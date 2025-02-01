@@ -31,7 +31,7 @@ const items = [
     {
         name:"Sign In",
         icon: LogIn,
-        path: "/signIn"
+        path: "/signin"
     }
 ]
 

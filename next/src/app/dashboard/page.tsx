@@ -12,7 +12,7 @@ const Dashboard = () => {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
-      router.push("/signIn"); // Redirect if not logged in
+      router.push("/signin"); // Redirect if not logged in
     } else {
       refetch(); // 🔹 Fetch user data again after login
     }
