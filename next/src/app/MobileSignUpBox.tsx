@@ -7,7 +7,7 @@ const SignUpBox:React.FC = () =>{
     const router = useRouter()
 
     const onSignUpClick = () =>{
-        router.push("/signIn")
+        router.push("/signin")
     }
 
     return(

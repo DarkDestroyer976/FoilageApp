@@ -38,7 +38,7 @@ const Navbar = () => {
             </div>
 
             <div>
-            <Button text="Join / Sign In" onClick={() => navigateTo('/signIn')} ></Button>
+            <Button text="Join / Sign In" onClick={() => navigateTo('/signin')} ></Button>
             </div>
         </div>
     );
