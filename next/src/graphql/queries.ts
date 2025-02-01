@@ -3,14 +3,23 @@ import { gql } from "@apollo/client";
 // 🔹 Fetch all job posts
 export const GET_ALL_JOBS = gql`
   query GetAllJobs {
-    allJobs {
-      id
+      allJobs {
+        id
       title
-      company
+      employer{
+        username
+      }
+      description
       location
+      site
       salary
+      experience
+      grade
+      employment
+      postedAt
+      isActive
+      }
     }
-  }
 `;
 
 
@@ -25,7 +34,6 @@ export const GET_ALL_APPLICATIONS = gql`
       jobPost {
         id
         title
-        company
       }
     }
   }
@@ -36,25 +44,35 @@ export const CREATE_JOB_POST = gql`
   mutation CreateJobPost(
     $title: String!
     $description: String!
-    $company: String!
     $location: String!
+    $site: String!
     $salary: Float!
+    $experience: String!
+    $grade: String!
+    $employment: String!
   ) {
     createJobPost(
       title: $title
       description: $description
-      company: $company
       location: $location
+      site: $site
       salary: $salary
+      experience: $experience
+      grade: $grade
+      employment: $employment
     ) {
       jobPost {
         id
         title
-        company
         description
         location
+        site
         salary
+        experience
+        grade
+        employment
         postedAt
+        isActive
       }
     }
   }
@@ -135,6 +153,36 @@ export const GET_ME = gql`
       username
       email
       userType
+      connectedJobs {
+        id
+        title
+        description
+        location
+        site
+        salary
+        experience
+        grade
+        employment
+        postedAt
+        isActive
+      }
+    }
+  }
+`;
+
+
+export const ADD_CONNECTED_JOB = gql`
+  mutation AddConnectedJob($jobId: Int!) {
+    addConnectedJob(jobId: $jobId) {
+      success
+    }
+  }
+`;
+
+export const REMOVE_CONNECTED_JOB = gql`
+  mutation RemoveConnectedJob($jobId: Int!) {
+    removeConnectedJob(jobId: $jobId) {
+      success
     }
   }
 `;

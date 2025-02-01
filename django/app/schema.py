@@ -7,15 +7,20 @@ from .models import JobPost, Application
 
 # User Type
 class UserType(DjangoObjectType):
+    connected_jobs = graphene.List(graphene.Int)
+
     class Meta:
         model = get_user_model()
-        fields = ("id", "username", "email", "user_type")
+        fields = ("id", "username", "email", "user_type", "connected_jobs")
+
+    def resolve_connected_jobs(self, info):
+        return [job.id for job in self.connected_jobs.all()]
 
 # Job Post Type
 class JobPostType(DjangoObjectType):
     class Meta:
         model = JobPost
-        fields = ("id", "employer", "title", "description", "company", "location", "salary", "posted_at", "is_active")
+        fields = ("id", "employer", "title", "description", "location", "site", "salary", "experience", "grade", "employment", "posted_at", "is_active")
 
 # Application Type
 class ApplicationType(DjangoObjectType):
@@ -48,26 +53,37 @@ class CreateJobPost(graphene.Mutation):
     class Arguments:
         title = graphene.String(required=True)
         description = graphene.String(required=True)
-        company = graphene.String(required=True)
         location = graphene.String(required=True)
+        site = graphene.String(required=True)
         salary = graphene.Float(required=True)
+        experience = graphene.String(required=True)
+        grade = graphene.String(required=True)
+        employment = graphene.String(required=True)
 
     job_post = graphene.Field(JobPostType)
 
-    def mutate(self, info, title, description, company, location, salary):
+    def mutate(self, info, title, description, location, salary, site, experience, grade, employment):
         user = info.context.user
-        if not user.is_authenticated or user.user_type != "employer":
+        if not user.is_authenticated or user.user_type != "employer" or user.user_type == "admin":
             raise Exception("Only employers can create job posts.")
 
         job_post = JobPost(
             employer=user,
             title=title,
             description=description,
-            company=company,
             location=location,
-            salary=salary
+            salary=salary,
+            site=site,
+            experience=experience,
+            grade=grade,
+            employment=employment
+
         )
         job_post.save()
+
+        user.connected_jobs.add(job_post)
+        user.save()
+
         return CreateJobPost(job_post=job_post)
 
 class DeleteJobPost(graphene.Mutation):
@@ -112,6 +128,10 @@ class CreateApplication(graphene.Mutation):
             resume=resume
         )
         application.save()
+
+        user.connected_jobs.add(job_post)
+        user.save()
+
         return CreateApplication(application=application)
 
 class DeleteApplication(graphene.Mutation):
@@ -152,6 +172,41 @@ class AuthMutation(graphene.ObjectType):
     refresh_token = mutations.RefreshToken.Field()
     revoke_token = mutations.RevokeToken.Field()
 
+#connected job removing and adding
+class AddConnectedJob(graphene.Mutation):
+    class Arguments:
+        job_id = graphene.Int(required=True)
+
+    success = graphene.Boolean()
+
+    def mutate(self, info, job_id):
+        user = info.context.user
+        if not user.is_authenticated:
+            raise Exception("Authentication required.")
+
+        success = user.add_connected_job(job_id)
+        if not success:
+            raise Exception("Job ID not found.")
+
+        return AddConnectedJob(success=True)
+
+class RemoveConnectedJob(graphene.Mutation):
+    class Arguments:
+        job_id = graphene.Int(required=True)
+
+    success = graphene.Boolean()
+
+    def mutate(self, info, job_id):
+        user = info.context.user
+        if not user.is_authenticated:
+            raise Exception("Authentication required.")
+
+        success = user.remove_connected_job(job_id)
+        if not success:
+            raise Exception("Job ID not found.")
+
+        return RemoveConnectedJob(success=True)
+
 # Queries
 class Query(UserQuery, MeQuery, graphene.ObjectType):
     all_jobs = graphene.List(JobPostType)
@@ -160,6 +215,7 @@ class Query(UserQuery, MeQuery, graphene.ObjectType):
     application_by_id = graphene.Field(ApplicationType, id=graphene.Int(required=True))
     all_users = graphene.List(UserType)
 
+    
     def resolve_all_users(self, info):
         user = info.context.user
         if not user.is_authenticated or user.user_type != "admin":
@@ -192,6 +248,8 @@ class Mutation(AuthMutation, graphene.ObjectType):
     create_application = CreateApplication.Field()
     delete_job_post = DeleteJobPost.Field()
     delete_application = DeleteApplication.Field()
+    add_connected_job = AddConnectedJob.Field()
+    remove_connected_job = RemoveConnectedJob.Field()
 
 # Schema Definition
 schema = graphene.Schema(query=Query, mutation=Mutation)

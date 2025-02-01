@@ -10,8 +10,30 @@ class User(AbstractUser):
     ]
     user_type = models.CharField(max_length=20, choices=USER_TYPES, default='job_seeker')
 
+    connected_jobs = models.ManyToManyField("JobPost", related_name="connected_users", blank=True)
+
     def __str__(self):
         return f"{self.username} ({self.get_user_type_display()})"
+    
+    def add_connected_job(self, job_id):
+        """Adds a job to connected_jobs list if it exists"""
+        try:
+            job = JobPost.objects.get(id=job_id)
+            self.connected_jobs.add(job)
+            self.save()
+            return True
+        except JobPost.DoesNotExist:
+            return False
+
+    def remove_connected_job(self, job_id):
+        """Removes a job from connected_jobs list if it exists"""
+        try:
+            job = JobPost.objects.get(id=job_id)
+            self.connected_jobs.remove(job)
+            self.save()
+            return True
+        except JobPost.DoesNotExist:
+            return False
 
 from django.db import models
 from django.conf import settings
@@ -27,7 +49,11 @@ class JobPost(models.Model):
     description = models.TextField()
     company = models.CharField(max_length=255)
     location = models.CharField(max_length=255)
+    site = models.CharField(max_length=255)
     salary = models.FloatField(null=True, blank=True)
+    experience = models.CharField(max_length=255)
+    grade = models.CharField(max_length=10)
+    employment = models.CharField(max_length=255)
     posted_at = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
 
